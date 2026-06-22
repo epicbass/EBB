@@ -8,7 +8,7 @@
  * Do NOT paste the private Admin deployment URL here.
  */
 
-const PUBLIC_API_URL = 'PASTE_YOUR_PUBLIC_API_APPS_SCRIPT_WEB_APP_URL_HERE';
+const PUBLIC_API_URL = 'https://script.google.com/macros/s/AKfycbzh6_idhvoUSVJbvtXaYB-J6TQOb-Z1l3ZSTgiYGo3LBv1388gRiV1ctkvla0z0KA_m/exec';
 
 const PLATFORM_LABELS = {
   youtube_url: 'YT',
