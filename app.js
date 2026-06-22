@@ -9,6 +9,8 @@
  */
 
 const PUBLIC_API_URL = 'https://script.google.com/macros/s/AKfycbzh6_idhvoUSVJbvtXaYB-J6TQOb-Z1l3ZSTgiYGo3LBv1388gRiV1ctkvla0z0KA_m/exec';
+console.log('EBB app.js loaded - version 3');
+console.log('Public API URL:', PUBLIC_API_URL);
 
 const PLATFORM_LABELS = {
   youtube_url: 'YT',
