@@ -8,9 +8,7 @@
  * Do NOT paste the private Admin deployment URL here.
  */
 
-const PUBLIC_API_URL = 'https://script.google.com/macros/s/AKfycbzh6_idhvoUSVJbvtXaYB-J6TQOb-Z1l3ZSTgiYGo3LBv1388gRiV1ctkvla0z0KA_m/exec';
-console.log('EBB app.js loaded - version 3');
-console.log('Public API URL:', PUBLIC_API_URL);
+const PUBLIC_API_URL = 'PASTE_YOUR_PUBLIC_API_APPS_SCRIPT_WEB_APP_URL_HERE';
 
 const PLATFORM_LABELS = {
   youtube_url: 'YT',
@@ -106,6 +104,46 @@ function renderSite(data) {
   renderOfficialLinks(config);
 }
 
+
+function toDisplayImageUrl(url) {
+  const value = String(url || '').trim();
+  const id = extractDriveFileId(value);
+  if (id) return 'https://drive.google.com/thumbnail?id=' + id + '&sz=w2000';
+  return value;
+}
+
+function renderMediaEmbed(url) {
+  const displayUrl = String(url || '').trim();
+  if (!displayUrl) return '';
+
+  if (isDirectVideoUrl(displayUrl)) {
+    return `<video src="${escapeAttr(displayUrl)}" muted loop playsinline autoplay></video>`;
+  }
+
+  if (isDrivePreviewUrl(displayUrl)) {
+    return `<iframe class="drive-preview" src="${escapeAttr(displayUrl)}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
+  }
+
+  return `<a class="media-open" href="${escapeAttr(displayUrl)}" target="_blank" rel="noopener">Open Video</a>`;
+}
+
+function isDirectVideoUrl(url) {
+  return /\.(mp4|webm|ogg)(\?|#|$)/i.test(String(url || ''));
+}
+
+function isDrivePreviewUrl(url) {
+  return /drive\.google\.com\/file\/d\/[^/]+\/preview/i.test(String(url || ''));
+}
+
+function extractDriveFileId(url) {
+  const value = String(url || '');
+  let match = value.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (match) return match[1];
+  match = value.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (match) return match[1];
+  return '';
+}
+
 function renderTracks(tracks) {
   const el = document.getElementById('tracksGrid');
 
@@ -117,8 +155,8 @@ function renderTracks(tracks) {
   el.innerHTML = tracks.map(track => {
     const image = track.cover_url || '';
     const video = track.scene_video_url || '';
-    const bg = image ? `style="background-image:url('${escapeAttr(image)}')"` : '';
-    const media = video ? `<video src="${escapeAttr(video)}" muted loop playsinline autoplay></video>` : '';
+    const bg = image ? `style="background-image:url('${escapeAttr(toDisplayImageUrl(image))}')"` : '';
+    const media = video ? renderMediaEmbed(video) : '';
 
     return `
       <article class="card">
@@ -159,7 +197,7 @@ function renderProducts(products) {
 
   el.innerHTML = products.map(product => {
     const image = product.cinematic_image_url || '';
-    const bg = image ? `style="background-image:url('${escapeAttr(image)}')"` : '';
+    const bg = image ? `style="background-image:url('${escapeAttr(toDisplayImageUrl(image))}')"` : '';
 
     return `
       <article class="card">
